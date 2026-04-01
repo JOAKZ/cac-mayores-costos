@@ -15,8 +15,8 @@ class Command(BaseCommand):
     help = 'Scrapea el último índice de la CAC usando Playwright y lo guarda en la base de datos'
 
     def add_arguments(self, parser):
-        parser.add_argument('mes_objetivo', type=str, help='Mes a actualizar en formato MM-YYYY (ej. 02-2026)')
-
+        parser.add_argument('mes_objetivo', nargs='?', type=str, help='Mes a actualizar en formato MM-YYYY (ej. 02-2026)')
+    
     def limpiar_numero(self, valor_str):
         """Limpia el string del PDF y lo convierte a Decimal"""
         valor_limpio = valor_str.replace('f', '').strip()
@@ -24,10 +24,28 @@ class Command(BaseCommand):
         return Decimal(valor_limpio)
 
     def handle(self, *args, **kwargs):
-        mes_objetivo = kwargs['mes_objetivo']
+        mes_objetivo = kwargs.get('mes_objetivo')
+        
+        # Si Railway no le pasa el mes, calculamos el MES ANTERIOR dinámicamente
+        if not mes_objetivo:
+            hoy = datetime.now()
+            
+            # Lógica matemática para restar un mes de forma segura
+            if hoy.month == 1:
+                mes_anterior = 12
+                anio = hoy.year - 1
+            else:
+                mes_anterior = hoy.month - 1
+                anio = hoy.year
+                
+            # Formateamos a 'MM-YYYY' asegurando el cero a la izquierda (ej: '02' en vez de '2')
+            mes_objetivo = f"{mes_anterior:02d}-{anio}"
+            
+            self.stdout.write(self.style.WARNING(f"ℹ️ Modo automático: Buscando el índice del mes anterior -> {mes_objetivo}"))
+
         url_base = "https://www.cifrasonline.com.ar/indice-cac/"
         pdf_url = None
-        
+
         self.stdout.write(self.style.WARNING("1. Abriendo navegador en segundo plano (Playwright)..."))
         
         # --- BLOQUE PLAYWRIGHT ---
