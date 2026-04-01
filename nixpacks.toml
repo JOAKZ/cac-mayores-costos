@@ -1,0 +1,9 @@
+[phases.setup]
+nixPkgs = ["...", "python3"]
+
+[phases.build]
+cmds = [
+    "pip install -r requirements.txt",
+    "python manage.py collectstatic --noinput",
+    "playwright install chromium --with-deps"
+]

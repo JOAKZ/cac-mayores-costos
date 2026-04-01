@@ -1,0 +1,11 @@
+django
+pandas
+openpyxl
+requests
+beautifulsoup4
+pdfplumber
+playwright
+psycopg2-binary
+dj-database-url
+whitenoise
+gunicorn

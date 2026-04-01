@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora CAC | Mayores Costos</title>
+    <style>
+        :root {
+            --bg-color: #f8f9fa;
+            --text-color: #212529;
+            --card-bg: #ffffff;
+            --input-border: #ced4da;
+            --accent: #0d6efd;
+            --accent-hover: #0b5ed7;
+            --button-text: #fff;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+            --card-bg: #1e1e1e;
+            --input-border: #444;
+            --accent: #bb86fc;
+            --accent-hover: #9b65e6;
+            --button-text: #000;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 480px;
+            position: relative;
+        }
+
+        .header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        h1 { margin: 0; font-size: 1.5rem; font-weight: 700; }
+
+        .toggle-btn {
+            background: none;
+            border: 1px solid var(--input-border);
+            color: var(--text-color);
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+        
+        .toggle-btn:hover { background-color: var(--input-border); }
+
+        .form-group { margin-bottom: 1.2rem; }
+        
+        label { 
+            display: block; 
+            margin-bottom: 0.5rem; 
+            font-weight: 500; 
+            font-size: 0.9rem;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--input-border);
+            border-radius: 8px;
+            background: var(--bg-color);
+            color: var(--text-color);
+            box-sizing: border-box;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--accent);
+            color: var(--button-text);
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: background-color 0.2s;
+        }
+
+        button[type="submit"]:hover { background-color: var(--accent-hover); }
+
+        .info-section {
+            margin-top: 2.5rem;
+            font-size: 0.85rem;
+            opacity: 0.8;
+            line-height: 1.6;
+            border-top: 1px solid var(--input-border);
+            padding-top: 1.5rem;
+        }
+
+        .info-section h3 { font-size: 1rem; margin-bottom: 0.5rem; }
+        
+        .error-list {
+            background-color: rgba(255, 0, 0, 0.1);
+            border-left: 4px solid red;
+            padding: 10px;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header-row">
+            <h1>Cálculo CAC</h1>
+            <button class="toggle-btn" id="theme-toggle" title="Cambiar Tema">🌗</button>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+            
+            {% if form.errors %}
+                <div class="error-list">
+                    {% for field, errors in form.errors.items %}
+                        {% for error in errors %}
+                            <div>• {{ error }}</div>
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <div class="form-group">
+                <label for="{{ form.nombre_proyecto.id_for_label }}">Nombre del Proyecto</label>
+                {{ form.nombre_proyecto }}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.fecha_base.id_for_label }}">Fecha Base (Inicio)</label>
+                {{ form.fecha_base }}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.fecha_final.id_for_label }}">Fecha Final (Actualización)</label>
+                {{ form.fecha_final }}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.presupuesto.id_for_label }}">Presupuesto Original ($)</label>
+                {{ form.presupuesto }}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.tipo_indice.id_for_label }}">Índice de Ajuste</label>
+                {{ form.tipo_indice }}
+            </div>
+
+            <button type="submit">DESCARGAR EXCEL ACTUALIZADO</button>
+        </form>
+
+        <div class="info-section">
+            <h3>Sobre el índice CAC</h3>
+            <p>
+                Este cálculo utiliza los índices oficiales de la Cámara Argentina de la Construcción.
+                El cálculo de "Mayores Costos" refleja la diferencia de precios entre el mes base y el mes de actualización.
+            </p>
+            <p>
+                <strong>Nota:</strong> Los índices de Mano de Obra suelen variar según acuerdos paritarios, mientras que Materiales sigue más de cerca la inflación del dólar y costos de producción.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        const toggleBtn = document.getElementById('theme-toggle');
+        const html = document.documentElement;
+
+        // Lógica de Modo Oscuro
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            html.setAttribute('data-theme', savedTheme);
+        } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            html.setAttribute('data-theme', 'dark');
+        }
+
+        toggleBtn.addEventListener('click', () => {
+            if (html.getAttribute('data-theme') === 'dark') {
+                html.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'light');
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+    </script>
+</body>
+</html>

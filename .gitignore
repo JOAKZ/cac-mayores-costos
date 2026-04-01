@@ -1,0 +1,20 @@
+# Entornos virtuales
+venv/
+env/
+.venv/
+
+# Archivos de caché de Python
+__pycache__/
+*.pyc
+
+# Base de datos local (¡NUNCA se sube a producción!)
+db.sqlite3
+
+# Archivos temporales de tu scraper
+CAC_temp.pdf
+
+# Archivos de entorno (si llegas a usar variables secretas)
+.env
+
+# Archivos estáticos recopilados
+staticfiles/
