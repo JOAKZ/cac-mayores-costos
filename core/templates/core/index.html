@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <title>Calculadora CAC | Mayores Costos</title>
     <style>
         :root {
@@ -31,12 +32,48 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             transition: background-color 0.3s, color 0.3s;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
             margin: 0;
-            padding: 20px;
+            min-height: 100vh;
+        }
+
+        /* Envoltura principal para el layout */
+        .main-wrapper {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* --- ESTILOS DEL HEADER --- */
+        .main-header {
+            width: 100%;
+            padding: 20px 0;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: flex-end;
+            padding: 0 40px;
+        }
+
+        .profile-link a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+
+        .profile-link a:hover {
+            opacity: 0.7;
+        }
+
+        .profile-link i {
+            font-size: 1.8rem;
+            color: #0077b5;
         }
 
         .container {
@@ -46,7 +83,8 @@
             box-shadow: var(--shadow);
             width: 100%;
             max-width: 480px;
-            position: relative;
+            margin: auto;
+            box-sizing: border-box;
         }
 
         .header-row {
@@ -73,10 +111,10 @@
 
         .form-group { margin-bottom: 1.2rem; }
         
-        label { 
-            display: block; 
-            margin-bottom: 0.5rem; 
-            font-weight: 500; 
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
             font-size: 0.9rem;
         }
         
@@ -132,66 +170,95 @@
             font-size: 0.9rem;
             border-radius: 4px;
         }
+
+        @media (max-width: 600px) {
+            .profile-link span {
+                display: none;
+            }
+            .header-container {
+                padding: 0 20px;
+            }
+            .container {
+                padding: 1.5rem;
+                border-radius: 0;
+            }
+        }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div class="header-row">
-            <h1>Cálculo CAC</h1>
-            <button class="toggle-btn" id="theme-toggle" title="Cambiar Tema">🌗</button>
-        </div>
-
-        <form method="post">
-            {% csrf_token %}
-            
-            {% if form.errors %}
-                <div class="error-list">
-                    {% for field, errors in form.errors.items %}
-                        {% for error in errors %}
-                            <div>• {{ error }}</div>
-                        {% endfor %}
-                    {% endfor %}
+    <div class="main-wrapper">
+        
+        <header class="main-header">
+            <div class="header-container">
+                <div class="profile-link">
+                    <a href="https://www.linkedin.com/in/joaquín-carnota-5151062b5" target="_blank" rel="noopener noreferrer">
+                        <span>Joaquín Carnota</span>
+                        <i class="fa-brands fa-linkedin"></i>
+                    </a>
                 </div>
-            {% endif %}
-            <div class="form-group">
-                <label for="{{ form.nombre_proyecto.id_for_label }}">Nombre del Proyecto</label>
-                {{ form.nombre_proyecto }}
+            </div>
+        </header>
+
+        <div class="container">
+            <div class="header-row">
+                <h1>Cálculo CAC</h1>
+                <button class="toggle-btn" id="theme-toggle" title="Cambiar Tema">🌗</button>
             </div>
 
-            <div class="form-group">
-                <label for="{{ form.fecha_base.id_for_label }}">Fecha Base (Inicio)</label>
-                {{ form.fecha_base }}
+            <form method="post">
+                {% csrf_token %}
+                
+                {% if form.errors %}
+                    <div class="error-list">
+                        {% for field, errors in form.errors.items %}
+                            {% for error in errors %}
+                                <div>• {{ error }}</div>
+                            {% endfor %}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                
+                <div class="form-group">
+                    <label for="{{ form.nombre_proyecto.id_for_label }}">Nombre del Proyecto</label>
+                    {{ form.nombre_proyecto }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.fecha_base.id_for_label }}">Fecha Base (Inicio)</label>
+                    {{ form.fecha_base }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.fecha_final.id_for_label }}">Fecha Final (Actualización)</label>
+                    {{ form.fecha_final }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.presupuesto.id_for_label }}">Presupuesto Original ($)</label>
+                    {{ form.presupuesto }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.tipo_indice.id_for_label }}">Índice de Ajuste</label>
+                    {{ form.tipo_indice }}
+                </div>
+
+                <button type="submit">DESCARGAR EXCEL ACTUALIZADO</button>
+            </form>
+
+            <div class="info-section">
+                <h3>Sobre el índice CAC</h3>
+                <p>
+                    Este cálculo utiliza los índices oficiales de la Cámara Argentina de la Construcción.
+                    El cálculo de "Mayores Costos" refleja la diferencia de precios entre el mes base y el mes de actualización.
+                </p>
+                <p>
+                    <strong>Nota:</strong> Los índices de Mano de Obra suelen variar según acuerdos paritarios, mientras que Materiales sigue más de cerca la inflación del dólar y costos de producción.
+                </p>
             </div>
-
-            <div class="form-group">
-                <label for="{{ form.fecha_final.id_for_label }}">Fecha Final (Actualización)</label>
-                {{ form.fecha_final }}
-            </div>
-
-            <div class="form-group">
-                <label for="{{ form.presupuesto.id_for_label }}">Presupuesto Original ($)</label>
-                {{ form.presupuesto }}
-            </div>
-
-            <div class="form-group">
-                <label for="{{ form.tipo_indice.id_for_label }}">Índice de Ajuste</label>
-                {{ form.tipo_indice }}
-            </div>
-
-            <button type="submit">DESCARGAR EXCEL ACTUALIZADO</button>
-        </form>
-
-        <div class="info-section">
-            <h3>Sobre el índice CAC</h3>
-            <p>
-                Este cálculo utiliza los índices oficiales de la Cámara Argentina de la Construcción.
-                El cálculo de "Mayores Costos" refleja la diferencia de precios entre el mes base y el mes de actualización.
-            </p>
-            <p>
-                <strong>Nota:</strong> Los índices de Mano de Obra suelen variar según acuerdos paritarios, mientras que Materiales sigue más de cerca la inflación del dólar y costos de producción.
-            </p>
         </div>
+
     </div>
 
     <script>

@@ -12,7 +12,7 @@ class CalculoForm(forms.Form):
     nombre_proyecto = forms.CharField(
         label="Nombre del Archivo / Proyecto",
         max_length=100,
-        widget=forms.TextInput(attrs={'placeholder': 'Ej: Casa Emilio - Certificado 1'})
+        widget=forms.TextInput(attrs={'placeholder': 'Escribe aquí'})
     )
 
     fecha_base = forms.DateField(
