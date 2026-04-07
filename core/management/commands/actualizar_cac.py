@@ -1,4 +1,3 @@
-# core/management/commands/actualizar_cac.py
 import os
 import re
 import requests
@@ -8,7 +7,6 @@ from decimal import Decimal
 from django.core.management.base import BaseCommand
 from core.models import IndiceCAC
 
-# Nueva importación de Playwright (síncrona para simplificar)
 from playwright.sync_api import sync_playwright
 
 class Command(BaseCommand):
@@ -30,7 +28,6 @@ class Command(BaseCommand):
         if not mes_objetivo:
             hoy = datetime.now()
             
-            # Lógica matemática para restar un mes de forma segura
             if hoy.month == 1:
                 mes_anterior = 12
                 anio = hoy.year - 1
@@ -41,7 +38,7 @@ class Command(BaseCommand):
             # Formateamos a 'MM-YYYY' asegurando el cero a la izquierda (ej: '02' en vez de '2')
             mes_objetivo = f"{mes_anterior:02d}-{anio}"
             
-            self.stdout.write(self.style.WARNING(f"ℹ️ Modo automático: Buscando el índice del mes anterior -> {mes_objetivo}"))
+            self.stdout.write(self.style.WARNING(f"Modo automático: Buscando el índice del mes anterior -> {mes_objetivo}"))
 
         url_base = "https://www.cifrasonline.com.ar/indice-cac/"
         pdf_url = None
@@ -118,7 +115,7 @@ class Command(BaseCommand):
 
             accion = "Creado" if created else "Actualizado"
             self.stdout.write(self.style.SUCCESS(
-                f"✅ ¡Éxito! Registro {accion} para {mes_objetivo} -> Costo: {costo_const} | Mat: {materiales} | MO: {mano_obra}"
+                f"¡Éxito! Registro {accion} para {mes_objetivo} -> Costo: {costo_const} | Mat: {materiales} | MO: {mano_obra}"
             ))
 
         except Exception as e:

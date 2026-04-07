@@ -1,6 +1,6 @@
 import pandas as pd
 import io
-from .models import IndiceCAC  # Importamos tu nuevo modelo
+from .models import IndiceCAC
 
 def obtener_datos_bd():
     """Extrae los datos de SQL y los convierte en un DataFrame limpio."""
@@ -50,7 +50,7 @@ def generar_excel_mayores_costos(fecha_base, fecha_final, presupuesto, tipo_indi
     df_filtrado['Coeficiente'] = (df_filtrado[tipo_indice] / indice_base_valor) - 1
     df_filtrado['Importe'] = df_filtrado['Coeficiente'] * float(presupuesto)
     
-# 4. Formateo para Excel con openpyxl
+    # 4. Formateo para Excel con openpyxl
     output = io.BytesIO()
     
     with pd.ExcelWriter(output, engine='openpyxl') as writer:
@@ -80,10 +80,6 @@ def generar_excel_mayores_costos(fecha_base, fecha_final, presupuesto, tipo_indi
             worksheet.cell(row=row, column=3).number_format = percent_fmt
             worksheet.cell(row=row, column=4).number_format = money_fmt
 
-        # =========================================================
-        # NUEVO CÓDIGO: AGREGAR FILAS TOTALIZADORAS AL FINAL
-        # =========================================================
-        
         # 1. Calculamos los valores matemáticos
         monto_mayor_costo = df_export['Importe'].iloc[-1]
         monto_original = float(presupuesto)

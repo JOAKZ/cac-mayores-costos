@@ -7,13 +7,12 @@ env/
 __pycache__/
 *.pyc
 
-# Base de datos local (¡NUNCA se sube a producción!)
 db.sqlite3
 
-# Archivos temporales de tu scraper
+# Archivos temporales de scraper
 CAC_temp.pdf
 
-# Archivos de entorno (si llegas a usar variables secretas)
+# Archivos de entorno
 .env
 
 # Archivos estáticos recopilados

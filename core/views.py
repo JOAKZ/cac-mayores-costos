@@ -33,7 +33,7 @@ def index(request):
                     form.add_error(None, "Rango de fechas sin datos disponibles en la simulación.")
             
             except Exception as e:
-                # Esto te mostrará el error en la pantalla si algo falla en el Excel
+                # Mostrar el error en la pantalla si algo falla en el Excel
                 form.add_error(None, f"Error generando Excel: {str(e)}")
                 
     else:

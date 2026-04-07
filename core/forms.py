@@ -18,12 +18,12 @@ class CalculoForm(forms.Form):
     fecha_base = forms.DateField(
         widget=forms.DateInput(attrs={'type': 'month', 'class': 'form-control'}),
         label="Fecha Base",
-        input_formats=['%Y-%m']  # <--- ¡ESTO ES LO IMPORTANTE!
+        input_formats=['%Y-%m']
     )
     fecha_final = forms.DateField(
         widget=forms.DateInput(attrs={'type': 'month', 'class': 'form-control'}),
         label="Fecha Final",
-        input_formats=['%Y-%m']  # <--- ¡AQUÍ TAMBIÉN!
+        input_formats=['%Y-%m']
     )
     presupuesto = forms.DecimalField(
         min_value=0.01, 
