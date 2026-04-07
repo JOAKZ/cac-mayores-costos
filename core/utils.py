@@ -105,5 +105,10 @@ def generar_excel_mayores_costos(fecha_base, fecha_final, presupuesto, tipo_indi
         celda_total = worksheet.cell(row=fila_footer_3, column=4, value=monto_total_actualizado)
         celda_total.number_format = money_fmt
 
+        worksheet.column_dimensions['A'].width = 15
+        worksheet.column_dimensions['B'].width = 18
+        worksheet.column_dimensions['C'].width = 18
+        worksheet.column_dimensions['D'].width = 25
+
     output.seek(0)
     return output
