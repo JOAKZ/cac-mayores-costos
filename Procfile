@@ -1,1 +1,1 @@
-web: python manage.py migrate && gunicorn cac_project.wsgi --log-file -
+web: python manage.py migrate && gunicorn cac_project.wsgi --bind 0.0.0.0:$PORT --log-file -
