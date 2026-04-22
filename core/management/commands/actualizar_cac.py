@@ -40,6 +40,14 @@ class Command(BaseCommand):
             
             self.stdout.write(self.style.WARNING(f"Modo automático: Buscando el índice del mes anterior -> {mes_objetivo}"))
 
+        # Convertimos el string a objeto date ahora mismo, para poder consultar la BD
+        fecha_obj = datetime.strptime(mes_objetivo, '%m-%Y').date()
+        
+        # Consultamos si ya existe
+        if IndiceCAC.objects.filter(fecha=fecha_obj).exists():
+            self.stdout.write(self.style.SUCCESS(f"La base de datos ya estaba actualizada para {mes_objetivo}."))
+            return # Se corta la ejecución acá para no activar el scraper
+
         url_base = "https://www.cifrasonline.com.ar/indice-cac/"
         pdf_url = None
 
@@ -101,8 +109,6 @@ class Command(BaseCommand):
             costo_const = self.limpiar_numero(tablas[1][1][3])
             materiales = self.limpiar_numero(tablas[1][2][3])
             mano_obra = self.limpiar_numero(tablas[1][3][3])
-
-            fecha_obj = datetime.strptime(mes_objetivo, '%m-%Y').date()
 
             obj, created = IndiceCAC.objects.update_or_create(
                 fecha=fecha_obj,
