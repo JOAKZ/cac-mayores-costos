@@ -4,7 +4,7 @@ openpyxl
 requests
 beautifulsoup4
 pdfplumber
-playwright
+playwright==1.60.0
 psycopg2-binary
 dj-database-url
 whitenoise
