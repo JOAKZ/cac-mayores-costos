@@ -91,7 +91,6 @@ class Command(BaseCommand):
             pdf_url = f"https://drive.google.com/uc?export=download&id={file_id}"
         
         # --- DESCARGA CON REQUESTS ---
-        # (Mantenemos requests porque para Google Drive directo es lo más veloz y estable)
         self.stdout.write("4. Descargando el archivo PDF real...")
         headers = {"User-Agent": "Mozilla/5.0"}
         pdf_response = requests.get(pdf_url, headers=headers)
@@ -105,6 +104,23 @@ class Command(BaseCommand):
         try:
             with pdfplumber.open(temp_pdf_name) as p:
                 tablas = p.pages[0].extract_tables()
+
+            MESES_ESPANOL = {
+                1: 'ENE', 2: 'FEB', 3: 'MAR', 4: 'ABR', 5: 'MAY', 6: 'JUN',
+                7: 'JUL', 8: 'AGO', 9: 'SEP', 10: 'OCT', 11: 'NOV', 12: 'DIC'
+            }
+            # Armamos el string esperado usando el objeto date que ya teníamos validado
+            str_fecha_esperada = f"{MESES_ESPANOL[fecha_obj.month]}{fecha_obj.year}"
+            
+            fecha_pdf_sucia = tablas[3][1][0]
+            fecha_pdf_limpia = fecha_pdf_sucia.replace("*", "").strip().upper()
+
+            if fecha_pdf_limpia != str_fecha_esperada:
+                self.stdout.write(self.style.WARNING(f"Alerta: Se esperaba {str_fecha_esperada} pero el PDF dice {fecha_pdf_limpia}."))
+                self.stdout.write(self.style.WARNING("La CAC todavía no actualizó el archivo de este mes. Abortando guardado."))
+                return
+            
+            self.stdout.write(self.style.SUCCESS(f"Validación exitosa: El PDF corresponde a {fecha_pdf_limpia}."))
 
             costo_const = self.limpiar_numero(tablas[3][0][2])
             materiales = self.limpiar_numero(tablas[3][1][2])
