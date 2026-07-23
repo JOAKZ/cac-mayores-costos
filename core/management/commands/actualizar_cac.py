@@ -106,9 +106,9 @@ class Command(BaseCommand):
             with pdfplumber.open(temp_pdf_name) as p:
                 tablas = p.pages[0].extract_tables()
 
-            costo_const = self.limpiar_numero(tablas[1][1][3])
-            materiales = self.limpiar_numero(tablas[1][2][3])
-            mano_obra = self.limpiar_numero(tablas[1][3][3])
+            costo_const = self.limpiar_numero(tablas[3][0][2])
+            materiales = self.limpiar_numero(tablas[3][1][2])
+            mano_obra = self.limpiar_numero(tablas[3][2][2])
 
             obj, created = IndiceCAC.objects.update_or_create(
                 fecha=fecha_obj,
